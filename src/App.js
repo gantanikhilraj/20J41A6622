@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function App() {
+const NumberManagement = () => {
+  const [urls, setUrls] = useState('');
+  const [mergedNumbers, setMergedNumbers] = useState([]);
+
+  const handleFetchNumbers = async () => {
+    try {
+      const response = await axios.get(`/api/numbers?url=${urls}`);
+      setMergedNumbers(response.data.numbers);
+    } catch (error) {
+      console.error('Error fetching numbers:', error);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Nikhil
-        </a>
-      </header>
+    <div>
+      <h1>Number Management Service</h1>
+      <div>
+        <label>Enter URLs:</label>
+        <input
+          type="text"
+          value={urls}
+          onChange={(e) => setUrls(e.target.value)}
+        />
+      </div>
+      <button onClick={handleFetchNumbers}>Fetch Numbers</button>
+      <div>
+        <h2>Merged Unique Integers</h2>
+        <ul>
+          {mergedNumbers.map((number) => (
+            <li key={number}>{number}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
-}
+};
 
-export default App;
+export default NumberManagement;
